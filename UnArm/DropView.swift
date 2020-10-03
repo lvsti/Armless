@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct ScanResult {
+    enum WritableStatus {
+        case writable
+        case writableAsAdmin
+        case readOnlyVolume
+    }
     let url: URL
-    let isWritable: Bool
+    let writableStatus: WritableStatus
     let originalSize: Int
     let armSliceSize: Int?
 }
@@ -53,11 +58,12 @@ class ViewModel: DropDelegate {
     }
 
     private func analyzeFile(at url: URL) -> ScanResult? {
-        let values = try! url.resourceValues(forKeys: [.isRegularFileKey, .isExecutableKey, .isWritableKey, .fileSizeKey])
-        guard values.isExecutable! && values.isRegularFile! else { return nil }
+        guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .isExecutableKey, .isWritableKey, .volumeIsReadOnlyKey, .fileSizeKey]),
+              values.isExecutable! && values.isRegularFile!
+        else { return nil }
 
         return ScanResult(url: url,
-                          isWritable: values.isWritable!,
+                          writableStatus: values.volumeIsReadOnly! ? .readOnlyVolume : values.isWritable! ? .writable : .writableAsAdmin,
                           originalSize: values.fileSize!,
                           armSliceSize: sizeOfARM64SliceInBinary(at: url))
     }
