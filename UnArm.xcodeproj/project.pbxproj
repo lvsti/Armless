@@ -8,18 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		BE0CEEFF2527B724009C421C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEEFE2527B724009C421C /* AppDelegate.swift */; };
-		BE0CEF012527B724009C421C /* DropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF002527B724009C421C /* DropView.swift */; };
+		BE0CEF012527B724009C421C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF002527B724009C421C /* MainView.swift */; };
 		BE0CEF032527B724009C421C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE0CEF022527B724009C421C /* Assets.xcassets */; };
 		BE0CEF062527B724009C421C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE0CEF052527B724009C421C /* Preview Assets.xcassets */; };
 		BE0CEF092527B724009C421C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE0CEF072527B724009C421C /* Main.storyboard */; };
 		BE0CEF152527CE40009C421C /* ScanResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF142527CE40009C421C /* ScanResultsView.swift */; };
 		BE0CEF1C2527D00C009C421C /* MachOReader.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF1B2527D00C009C421C /* MachOReader.m */; };
+		BE0CEF1F252917E3009C421C /* ScanResultRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF1E252917E3009C421C /* ScanResultRow.swift */; };
+		BE0CEF23252A7CE1009C421C /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF22252A7CE1009C421C /* ViewModel.swift */; };
+		BE2269FB252BC34A002D6DDF /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2269FA252BC34A002D6DDF /* MainViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		BE0CEEFB2527B724009C421C /* UnArm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnArm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE0CEEFE2527B724009C421C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		BE0CEF002527B724009C421C /* DropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropView.swift; sourceTree = "<group>"; };
+		BE0CEF002527B724009C421C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		BE0CEF022527B724009C421C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE0CEF052527B724009C421C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BE0CEF082527B724009C421C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -28,6 +31,9 @@
 		BE0CEF192527D00C009C421C /* UnArm-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UnArm-Bridging-Header.h"; sourceTree = "<group>"; };
 		BE0CEF1A2527D00C009C421C /* MachOReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MachOReader.h; sourceTree = "<group>"; };
 		BE0CEF1B2527D00C009C421C /* MachOReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MachOReader.m; sourceTree = "<group>"; };
+		BE0CEF1E252917E3009C421C /* ScanResultRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultRow.swift; sourceTree = "<group>"; };
+		BE0CEF22252A7CE1009C421C /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		BE2269FA252BC34A002D6DDF /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,8 +67,11 @@
 			isa = PBXGroup;
 			children = (
 				BE0CEEFE2527B724009C421C /* AppDelegate.swift */,
-				BE0CEF002527B724009C421C /* DropView.swift */,
+				BE0CEF22252A7CE1009C421C /* ViewModel.swift */,
+				BE0CEF002527B724009C421C /* MainView.swift */,
+				BE2269FA252BC34A002D6DDF /* MainViewModel.swift */,
 				BE0CEF142527CE40009C421C /* ScanResultsView.swift */,
+				BE0CEF1E252917E3009C421C /* ScanResultRow.swift */,
 				BE0CEF1A2527D00C009C421C /* MachOReader.h */,
 				BE0CEF1B2527D00C009C421C /* MachOReader.m */,
 				BE0CEF022527B724009C421C /* Assets.xcassets */,
@@ -153,9 +162,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE0CEF012527B724009C421C /* DropView.swift in Sources */,
+				BE2269FB252BC34A002D6DDF /* MainViewModel.swift in Sources */,
+				BE0CEF012527B724009C421C /* MainView.swift in Sources */,
+				BE0CEF1F252917E3009C421C /* ScanResultRow.swift in Sources */,
 				BE0CEEFF2527B724009C421C /* AppDelegate.swift in Sources */,
 				BE0CEF152527CE40009C421C /* ScanResultsView.swift in Sources */,
+				BE0CEF23252A7CE1009C421C /* ViewModel.swift in Sources */,
 				BE0CEF1C2527D00C009C421C /* MachOReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
