@@ -12,7 +12,7 @@ struct ScanResultRow: View {
     
     var body: some View {
         HStack {
-            Image(nsImage: NSWorkspace.shared.icon(forFile: scanResult.url.path))
+            Image(nsImage: scanResult.icon)
             VStack(alignment: .leading, spacing: 4) {
                 Text(scanResult.url.path)
                     .font(.system(size: 14.0, weight: .bold, design: .default))
@@ -33,12 +33,14 @@ struct ScanResultRow_Previews: PreviewProvider {
                                                  writableStatus: .writable,
                                                  originalSize: 100,
                                                  armSliceSize: nil,
-                                                 isProcessing: false))
+                                                 isProcessing: false,
+                                                 icon: NSImage()))
             ScanResultRow(scanResult: ScanResult(url: URL(fileURLWithPath: "/Applications/Dictionary.app/Contents/Dictionary"),
                                                  writableStatus: .writable,
                                                  originalSize: 100,
                                                  armSliceSize: nil,
-                                                 isProcessing: true))
+                                                 isProcessing: true,
+                                                 icon: NSImage()))
         }
     }
 }

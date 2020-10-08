@@ -19,6 +19,7 @@ struct ScanResult {
     let originalSize: Int
     let armSliceSize: Int?
     var isProcessing: Bool
+    let icon: NSImage
 }
 
 extension ScanResult: Identifiable {
@@ -103,12 +104,23 @@ class MainViewModel: ViewModel {
                           writableStatus: values.volumeIsReadOnly! ? .readOnlyVolume : values.isWritable! ? .writable : .writableAsAdmin,
                           originalSize: values.fileSize!,
                           armSliceSize: sizeOfARM64SliceInBinary(at: url),
-                          isProcessing: false)
+                          isProcessing: false,
+                          icon: icon(forFileAt: url))
     }
 
     private func sizeOfARM64SliceInBinary(at url: URL) -> Int? {
         guard let reader = MachOReader(url: url), reader.isFatBinary, reader.hasARM64 else { return nil }
         return Int(reader.arm64Size)
+    }
+
+    private func icon(forFileAt url: URL) -> NSImage {
+        let comps = url.pathComponents
+
+        if comps.count >= 3, comps.suffix(3).dropLast() == ["Contents", "MacOS"] {
+            return NSWorkspace.shared.icon(forFile: url.deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent().path)
+        }
+
+        return NSWorkspace.shared.icon(forFile: url.path)
     }
 
     private func updateResults(with newResults: [ScanResult]) {
