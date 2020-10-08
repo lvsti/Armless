@@ -100,10 +100,12 @@ class MainViewModel: ViewModel {
               values.isExecutable! && values.isRegularFile!
         else { return nil }
 
+        guard let reader = MachOReader(url: url) else { return nil }
+
         return ScanResult(url: url,
                           writableStatus: values.volumeIsReadOnly! ? .readOnlyVolume : values.isWritable! ? .writable : .writableAsAdmin,
                           originalSize: values.fileSize!,
-                          armSliceSize: sizeOfARM64SliceInBinary(at: url),
+                          armSliceSize: reader.isFatBinary && reader.hasARM64 ? Int(reader.arm64Size) : nil,
                           isProcessing: false,
                           icon: icon(forFileAt: url))
     }
