@@ -45,11 +45,13 @@
             if (arch->cputype == OSSwapInt32(CPU_TYPE_ARM64)) {
                 _hasARM64 = YES;
                 _arm64Size = OSSwapInt32(arch->size);
-            } else if (arch->cputype == OSSwapInt32(CPU_TYPE_X86_64)) {
+            }
+            else if (arch->cputype == OSSwapInt32(CPU_TYPE_X86_64)) {
                 _hasX86_64 = YES;
             }
         }
-    } else if (fatHeader->magic == FAT_MAGIC_64) {
+    }
+    else if (fatHeader->magic == FAT_MAGIC_64) {
         _isFatBinary = YES;
         if (fread(buf, 1, sizeof(struct fat_arch_64), macho) != sizeof(struct fat_arch_64)) {
             fclose(macho);
@@ -59,8 +61,18 @@
         if (arch->cputype == OSSwapInt32(CPU_TYPE_ARM64)) {
             _hasARM64 = YES;
             _arm64Size = OSSwapInt64(arch->size);
-        } else if (arch->cputype == OSSwapInt32(CPU_TYPE_X86_64)) {
+        }
+        else if (arch->cputype == OSSwapInt32(CPU_TYPE_X86_64)) {
             _hasX86_64 = YES;
+        }
+    }
+    else {
+        // check if it is a mach-o binary at all
+        struct mach_header* machHeader = (struct mach_header*)buf;
+        machHeader->magic = OSSwapInt32(machHeader->magic);
+        if (machHeader->magic != MH_MAGIC && machHeader->magic != MH_MAGIC_64) {
+            fclose(macho);
+            return nil;
         }
     }
 
