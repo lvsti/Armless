@@ -9,12 +9,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, SliceType) {
+    kSliceTypePPC,
+    kSliceTypePPC64,
+    kSliceTypeI386,
+    kSliceTypeX86_64,
+    kSliceTypeARMv6,
+    kSliceTypeARMv7,
+    kSliceTypeARMv7s,
+    kSliceTypeARM64,
+    kSliceTypeUnknown
+};
+
 @interface MachOReader : NSObject
 
 @property (nonatomic, readonly, assign) BOOL isFatBinary;
-@property (nonatomic, readonly, assign) BOOL hasX86_64;
-@property (nonatomic, readonly, assign) BOOL hasARM64;
-@property (nonatomic, readonly, assign) uint64_t arm64Size;
+@property (nonatomic, readonly) NSDictionary<NSNumber*, NSNumber*>* slices;
 
 - (instancetype _Nullable)initWithURL:(NSURL*)url;
 

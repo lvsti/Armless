@@ -12,8 +12,7 @@
 
 @implementation MachOReader {
     BOOL _isFatBinary;
-    BOOL _hasX86_64;
-    BOOL _hasARM64;
+    NSMutableDictionary* _slices;
 }
 
 - (instancetype)initWithURL:(NSURL*)url {
@@ -25,58 +24,40 @@
     }
 
     char buf[64];
-    if (fread(buf, 1, sizeof(struct fat_header), macho) != sizeof(struct fat_header)) {
+    if (fread(buf, 1, sizeof(uint32_t), macho) != sizeof(uint32_t)) {
         fclose(macho);
         return nil;
     }
 
-    struct fat_header* fatHeader = (struct fat_header*)buf;
-    fatHeader->magic = OSSwapInt32(fatHeader->magic);
-    fatHeader->nfat_arch = OSSwapInt32(fatHeader->nfat_arch);
+    fseek(macho, 0, SEEK_SET);
 
-    if (fatHeader->magic == FAT_MAGIC) {
-        _isFatBinary = YES;
-        for (int i = 0; i < fatHeader->nfat_arch; i++) {
-            if (fread(buf, 1, sizeof(struct fat_arch), macho) != sizeof(struct fat_arch)) {
-                fclose(macho);
-                return nil;
-            }
-            struct fat_arch* arch = (struct fat_arch*)buf;
-            if (arch->cputype == OSSwapInt32(CPU_TYPE_ARM64)) {
-                _hasARM64 = YES;
-                _arm64Size = OSSwapInt32(arch->size);
-            }
-            else if (arch->cputype == OSSwapInt32(CPU_TYPE_X86_64)) {
-                _hasX86_64 = YES;
-            }
-        }
-    }
-    else if (fatHeader->magic == FAT_MAGIC_64) {
-        _isFatBinary = YES;
-        if (fread(buf, 1, sizeof(struct fat_arch_64), macho) != sizeof(struct fat_arch_64)) {
-            fclose(macho);
-            return nil;
-        }
-        struct fat_arch_64* arch = (struct fat_arch_64*)buf;
-        if (arch->cputype == OSSwapInt32(CPU_TYPE_ARM64)) {
-            _hasARM64 = YES;
-            _arm64Size = OSSwapInt64(arch->size);
-        }
-        else if (arch->cputype == OSSwapInt32(CPU_TYPE_X86_64)) {
-            _hasX86_64 = YES;
-        }
-    }
-    else {
-        // check if it is a mach-o binary at all
-        struct mach_header* machHeader = (struct mach_header*)buf;
-        machHeader->magic = OSSwapInt32(machHeader->magic);
-        if (machHeader->magic != MH_MAGIC && machHeader->magic != MH_MAGIC_64) {
-            fclose(macho);
-            return nil;
-        }
+    _slices = [NSMutableDictionary dictionary];
+
+    uint32_t magic = *(uint32_t*)buf;
+    BOOL success = NO;
+    switch (magic) {
+        case FAT_MAGIC:
+            _isFatBinary = YES;
+            success = [self parseFatHeader:macho is64Bit:NO];
+            break;
+        case FAT_MAGIC_64:
+            _isFatBinary = YES;
+            success = [self parseFatHeader:macho is64Bit:YES];
+            break;
+        case MH_MAGIC:
+            success = [self parseMachHeader:macho is64Bit:NO];
+            break;
+        case MH_MAGIC_64:
+            success = [self parseMachHeader:macho is64Bit:YES];
+            break;
+        default: break;
     }
 
     fclose(macho);
+
+    if (!success) {
+        return nil;
+    }
 
     return self;
 }
@@ -85,12 +66,99 @@
     return _isFatBinary;
 }
 
-- (BOOL)hasX86_64 {
-    return _hasX86_64;
+- (NSDictionary<NSNumber *,NSNumber *> *)slices {
+    return _slices;
 }
 
-- (BOOL)hasARM64 {
-    return _hasARM64;
+- (BOOL)parseFatHeader:(FILE*)macho is64Bit:(BOOL)is64Bit {
+    char buf[64];
+    if (fread(buf, 1, sizeof(struct fat_header), macho) != sizeof(struct fat_header)) {
+        return NO;
+    }
+
+    struct fat_header* fatHeader = (struct fat_header*)buf;
+    fatHeader->nfat_arch = OSSwapInt32(fatHeader->nfat_arch);
+
+    for (int i = 0; i < fatHeader->nfat_arch; i++) {
+        if (is64Bit) {
+            if (fread(buf, 1, sizeof(struct fat_arch_64), macho) != sizeof(struct fat_arch_64)) {
+                return NO;
+            }
+
+            struct fat_arch_64* arch = (struct fat_arch_64*)buf;
+            [self updateSlicesWithCPUType:OSSwapInt32(arch->cputype) subtype:OSSwapInt32(arch->cpusubtype) size:OSSwapInt64(arch->size)];
+        }
+        else {
+            if (fread(buf, 1, sizeof(struct fat_arch), macho) != sizeof(struct fat_arch)) {
+                return NO;
+            }
+
+            struct fat_arch* arch = (struct fat_arch*)buf;
+            [self updateSlicesWithCPUType:OSSwapInt32(arch->cputype) subtype:OSSwapInt32(arch->cpusubtype) size:OSSwapInt32(arch->size)];
+        }
+    }
+    
+    return YES;
+}
+
+- (BOOL)parseMachHeader:(FILE*)macho is64Bit:(BOOL)is64Bit {
+    char buf[64];
+
+    cpu_type_t cpuType;
+    cpu_subtype_t cpuSubtype;
+    if (is64Bit) {
+        if (fread(buf, 1, sizeof(struct mach_header_64), macho) != sizeof(struct mach_header_64)) {
+            return NO;
+        }
+        struct mach_header_64* mh = (struct mach_header_64*)buf;
+        cpuType = mh->cputype;
+        cpuSubtype = mh->cpusubtype;
+    }
+    else {
+        if (fread(buf, 1, sizeof(struct mach_header), macho) != sizeof(struct mach_header)) {
+            return NO;
+        }
+        struct mach_header* mh = (struct mach_header*)buf;
+        cpuType = mh->cputype;
+        cpuSubtype = mh->cpusubtype;
+    }
+    fseek(macho, 0, SEEK_END);
+    uint64_t size = ftell(macho);
+    [self updateSlicesWithCPUType:cpuType subtype:cpuSubtype size:size];
+
+    return YES;
+}
+
+- (void)updateSlicesWithCPUType:(cpu_type_t)cpuType subtype:(cpu_subtype_t)cpuSubtype size:(uint64_t)size {
+    SliceType sliceType = kSliceTypeUnknown;
+
+    switch (cpuType) {
+        case CPU_TYPE_POWERPC: sliceType = kSliceTypePPC; break;
+        case CPU_TYPE_POWERPC64: sliceType = kSliceTypePPC64; break;
+        case CPU_TYPE_I386: sliceType = kSliceTypeI386; break;
+        case CPU_TYPE_X86_64: sliceType = kSliceTypeX86_64; break;
+        case CPU_TYPE_ARM64: sliceType = kSliceTypeARM64; break;
+        default:
+            if (cpuType & CPU_TYPE_ARM) {
+                if (cpuSubtype & CPU_SUBTYPE_ARM_V6) {
+                    sliceType = kSliceTypeARMv6;
+                }
+                else if (cpuSubtype & CPU_SUBTYPE_ARM_V7) {
+                    sliceType = kSliceTypeARMv7;
+                }
+                else if (cpuSubtype & CPU_SUBTYPE_ARM_V7S) {
+                    sliceType = kSliceTypeARMv7s;
+                }
+            }
+            break;
+    }
+
+    if (sliceType == kSliceTypeUnknown && _slices[@(sliceType)]) {
+        _slices[@(sliceType)] = @([_slices[@(sliceType)] unsignedLongLongValue] + size);
+    }
+    else {
+        _slices[@(sliceType)] = @(size);
+    }
 }
 
 @end
