@@ -14,10 +14,12 @@ struct ScanResult {
         case writableAsAdmin
         case readOnlyVolume
     }
+
     let url: URL
     let writableStatus: WritableStatus
+    let isFatBinary: Bool
+    let slices: [SliceType: UInt64]
     let originalSize: Int
-    let armSliceSize: Int?
     var isProcessing: Bool
     let icon: NSImage
 }
@@ -101,18 +103,13 @@ class MainViewModel: ViewModel {
         else { return nil }
 
         guard let reader = MachOReader(url: url) else { return nil }
-
         return ScanResult(url: url,
                           writableStatus: values.volumeIsReadOnly! ? .readOnlyVolume : values.isWritable! ? .writable : .writableAsAdmin,
+                          isFatBinary: reader.isFatBinary,
+                          slices: Dictionary(reader.slices.map { (SliceType(rawValue: $0.uintValue)!, UInt64($1.uintValue)) }, uniquingKeysWith: { $1 }),
                           originalSize: values.fileSize!,
-                          armSliceSize: reader.isFatBinary && reader.hasARM64 ? Int(reader.arm64Size) : nil,
                           isProcessing: false,
                           icon: icon(forFileAt: url))
-    }
-
-    private func sizeOfARM64SliceInBinary(at url: URL) -> Int? {
-        guard let reader = MachOReader(url: url), reader.isFatBinary, reader.hasARM64 else { return nil }
-        return Int(reader.arm64Size)
     }
 
     private func icon(forFileAt url: URL) -> NSImage {
@@ -141,13 +138,11 @@ class MainViewModel: ViewModel {
                 state.scanResults.append(newResult)
             }
         }
-
-        state.scanResults.sort(by: { $0.url.path < $1.url.path })
     }
 
-    private func disarmSelectedBinaries() {
+    private func disarmBinaries() {
         state.isProcessing = true
-        let binariesToDisarm = state.scanResults.enumerated().filter { state.selectedIndices.contains($0.offset) }.map { $0.element }
+        let binariesToDisarm = state.scanResults.filter { $0.writableStatus != .readOnlyVolume && $0.slices[.ARM64] != nil }
 
         DispatchQueue.global(qos: .userInitiated).async {
             for binary in binariesToDisarm {
