@@ -60,15 +60,17 @@ class MainViewModel: ViewModel {
     }
 
     private func handleDrop(_ info: DropInfo) {
-        guard let provider = info.itemProviders(for: [kUTTypeFileURL as String]).first else { return }
+        let providers = info.itemProviders(for: [kUTTypeFileURL as String])
 
-        provider.loadItem(forTypeIdentifier: kUTTypeFileURL as String, options: nil) { [weak self] data, error in
-            guard let self = self else { return }
-            if let data = data as? Data, let str = String(data: data, encoding: .utf8) {
-                let url = URL(fileURLWithPath: str).standardized
-                let results = self.scanForBinaries(at: url)
-                DispatchQueue.main.async {
-                    self.updateResults(with: results)
+        for provider in providers {
+            provider.loadItem(forTypeIdentifier: kUTTypeFileURL as String, options: nil) { [weak self] data, error in
+                guard let self = self else { return }
+                if let data = data as? Data, let str = String(data: data, encoding: .utf8) {
+                    let url = URL(fileURLWithPath: str).standardized
+                    let results = self.scanForBinaries(at: url)
+                    DispatchQueue.main.async {
+                        self.updateResults(with: results)
+                    }
                 }
             }
         }
