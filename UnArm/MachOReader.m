@@ -37,17 +37,21 @@
     BOOL success = NO;
     switch (magic) {
         case FAT_MAGIC:
+        case FAT_CIGAM:
             _isFatBinary = YES;
             success = [self parseFatHeader:macho is64Bit:NO];
             break;
         case FAT_MAGIC_64:
+        case FAT_CIGAM_64:
             _isFatBinary = YES;
             success = [self parseFatHeader:macho is64Bit:YES];
             break;
         case MH_MAGIC:
+        case MH_CIGAM:
             success = [self parseMachHeader:macho is64Bit:NO];
             break;
         case MH_MAGIC_64:
+        case MH_CIGAM_64:
             success = [self parseMachHeader:macho is64Bit:YES];
             break;
         default: break;
