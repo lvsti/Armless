@@ -23,8 +23,8 @@
         return nil;
     }
 
-    char buf[64];
-    if (fread(buf, 1, sizeof(uint32_t), macho) != sizeof(uint32_t)) {
+    uint32_t magic = 0;
+    if (fread(&magic, 1, sizeof(uint32_t), macho) != sizeof(uint32_t)) {
         fclose(macho);
         return nil;
     }
@@ -33,7 +33,6 @@
 
     _slices = [NSMutableDictionary dictionary];
 
-    uint32_t magic = *(uint32_t*)buf;
     BOOL success = NO;
     switch (magic) {
         case FAT_MAGIC:
@@ -81,9 +80,9 @@
     }
 
     struct fat_header* fatHeader = (struct fat_header*)buf;
-    fatHeader->nfat_arch = OSSwapInt32(fatHeader->nfat_arch);
+    int numArch = OSSwapInt32(fatHeader->nfat_arch);
 
-    for (int i = 0; i < fatHeader->nfat_arch; i++) {
+    for (int i = 0; i < numArch; i++) {
         if (is64Bit) {
             if (fread(buf, 1, sizeof(struct fat_arch_64), macho) != sizeof(struct fat_arch_64)) {
                 return NO;
