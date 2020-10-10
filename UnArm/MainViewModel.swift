@@ -43,6 +43,15 @@ enum MainViewInput {
     case clearList
 }
 
+extension SliceType {
+    var archName: String? {
+        switch self {
+        case .x86_64: return "x86_64"
+        case .arm64: return "arm64"
+        default: return nil
+        }
+    }
+}
 
 class MainViewModel: ViewModel {
     @Published private(set) var state: MainViewState = MainViewState(scanResults: [], selectedIDs: [], isProcessing: false, sliceTypeForCurrentArch: .x86_64)
@@ -53,7 +62,7 @@ class MainViewModel: ViewModel {
         case .didReceiveDrop(let info):
             handleDrop(info)
         case .didPressDisarmButton:
-            disarmBinaries()
+            thinBinaries()
         case .didChangeSelection(let ids):
             let validIDs = ids.filter { id in !state.scanResults.first(where: { result in id == result.id })!.isProcessing }
             state.selectedIDs = validIDs
@@ -149,18 +158,18 @@ class MainViewModel: ViewModel {
         }
     }
 
-    private func disarmBinaries() {
+    private func thinBinaries() {
         state.isProcessing = true
-        let binariesToDisarm = state.scanResults.filter { $0.writableStatus != .readOnlyVolume && $0.slices[.arm64] != nil }
+        let binariesToThin = state.scanResults.filter { $0.writableStatus != .readOnlyVolume && $0.slices.contains(where: { $0.key != sliceTypeForCurrentArch }) }
 
         DispatchQueue.global(qos: .userInitiated).async {
-            for binary in binariesToDisarm {
+            for binary in binariesToThin {
                 var processingBinary = binary
                 processingBinary.isProcessing = true
                 DispatchQueue.main.async {
                     self.updateResults(with: [processingBinary])
                 }
-                if self.disarmBinary(at: binary.url), let processedBinary = self.analyzeFile(at: binary.url) {
+                if self.thinBinary(at: binary.url), let processedBinary = self.analyzeFile(at: binary.url) {
                     DispatchQueue.main.async {
                         self.updateResults(with: [processedBinary])
                     }
@@ -172,11 +181,11 @@ class MainViewModel: ViewModel {
         }
     }
 
-    private func disarmBinary(at url: URL) -> Bool {
+    private func thinBinary(at url: URL) -> Bool {
         do {
-            let strippedURL = url.appendingPathExtension("disarmed")
+            let thinnedURL = url.appendingPathExtension("thinned")
             let lipo = try Process.run(URL(fileURLWithPath: "/usr/bin/lipo"),
-                                       arguments: ["-remove", "arm64", "-output", strippedURL.path, url.path])
+                                       arguments: ["-thin", sliceTypeForCurrentArch.archName!, "-output", thinnedURL.path, url.path])
             lipo.waitUntilExit()
 
             guard lipo.terminationStatus == 0 else {
@@ -184,7 +193,7 @@ class MainViewModel: ViewModel {
             }
 
             try FileManager.default.removeItem(at: url)
-            try FileManager.default.moveItem(at: strippedURL, to: url)
+            try FileManager.default.moveItem(at: thinnedURL, to: url)
         }
         catch {
             return false
