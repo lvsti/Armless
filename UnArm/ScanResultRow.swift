@@ -25,7 +25,13 @@ struct ScanResultRow: View {
             Text(sliceArchNames)
                 .font(.system(size: 10.0, weight: .regular, design: .default))
                 .frame(width: 50, height: nil, alignment: .center)
-            Image(nsImage: statusIcon)
+
+            if scanResult.isProcessing {
+                Spinner(isAnimating: Binding(get: { scanResult.isProcessing }, set: { _ in }), style: .spinning, controlSize: .small)
+            }
+            else {
+                Image(nsImage: statusIcon)
+            }
         }
         .opacity(isEligible ? 1.0 : 0.7)
         .padding(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4))
