@@ -30,30 +30,35 @@ extension ScanResult: Identifiable {
 
 struct MainViewState {
     var scanResults: [ScanResult]
-    var selectedIndices: IndexSet
+    var selectedIDs: Set<ScanResult.ID>
     var isProcessing: Bool
 }
 
 enum MainViewInput {
     case didReceiveDrop(info: DropInfo)
     case didPressDisarmButton
-    case didSelectRow(index: Int)
-    case didDeselectRow(index: Int)
+    case didChangeSelection(selectedIDs: Set<ScanResult.ID>)
+    case didPressDeleteOnList
     case clearList
 }
 
 
 class MainViewModel: ViewModel {
-    @Published private(set) var state: MainViewState = MainViewState(scanResults: [], selectedIndices: [], isProcessing: false)
+    @Published private(set) var state: MainViewState = MainViewState(scanResults: [], selectedIDs: [], isProcessing: false)
 
     func trigger(_ input: MainViewInput) {
         switch input {
         case .didReceiveDrop(let info):
             handleDrop(info)
         case .didPressDisarmButton:
-            disarmSelectedBinaries()
-        case .didSelectRow(let index): break
-        case .didDeselectRow(let index): break
+            disarmBinaries()
+        case .didChangeSelection(let ids):
+            let validIDs = ids.filter { id in !state.scanResults.first(where: { result in id == result.id })!.isProcessing }
+            state.selectedIDs = validIDs
+        case .didPressDeleteOnList:
+            guard !state.selectedIDs.isEmpty else { break }
+            state.scanResults = state.scanResults.filter { !state.selectedIDs.contains($0.id) }
+            state.selectedIDs.removeAll()
         case .clearList:
             break
         }

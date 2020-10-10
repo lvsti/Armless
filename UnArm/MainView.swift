@@ -18,11 +18,16 @@ struct MainView: View, DropDelegate {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             else {
-                List(viewModel.state.scanResults) { result in
+                let selection = Binding(get: { viewModel.state.selectedIDs },
+                                        set: { viewModel.trigger(.didChangeSelection(selectedIDs: $0)) })
+                List(viewModel.state.scanResults, selection: selection) { result in
                     let index = viewModel.state.scanResults.firstIndex(where: { $0.id == result.id })!
                     let bgView = Color(NSColor.alternatingContentBackgroundColors[index % NSColor.alternatingContentBackgroundColors.count])
                     ScanResultRow(scanResult: result)
                         .listRowBackground(bgView.frame(minHeight: 44))
+                }
+                .onDeleteCommand {
+                    viewModel.trigger(.didPressDeleteOnList)
                 }
             }
         }
