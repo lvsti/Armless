@@ -76,11 +76,24 @@ class MainViewModel: ViewModel {
     }
 
     private func handleDrop(_ info: DropInfo) {
+        guard !state.isProcessing else { return }
+
         let providers = info.itemProviders(for: [kUTTypeFileURL as String])
+        guard !providers.isEmpty else { return }
+
+        state.isProcessing = true
+        var remaining = providers.count
 
         for provider in providers {
-            provider.loadItem(forTypeIdentifier: kUTTypeFileURL as String, options: nil) { [weak self] data, error in
-                guard let self = self else { return }
+            provider.loadItem(forTypeIdentifier: kUTTypeFileURL as String, options: nil) { data, error in
+                defer {
+                    DispatchQueue.main.async {
+                        remaining -= 1
+                        if remaining == 0 {
+                            self.state.isProcessing = false
+                        }
+                    }
+                }
                 if let data = data as? Data, let str = String(data: data, encoding: .utf8) {
                     let url = URL(fileURLWithPath: str).standardized
                     let results = self.scanForBinaries(at: url)
@@ -103,13 +116,19 @@ class MainViewModel: ViewModel {
             return []
         }
 
+        guard let etor = FileManager.default.enumerator(at: url,
+                                                        includingPropertiesForKeys: [.isRegularFileKey, .isExecutableKey, .isWritableKey, .fileSizeKey],
+                                                        options: [.skipsHiddenFiles]) else {
+            return []
+        }
+
         var results: [ScanResult] = []
-        if let etor = FileManager.default.enumerator(at: url,
-                                                     includingPropertiesForKeys: [.isRegularFileKey, .isExecutableKey, .isWritableKey, .fileSizeKey],
-                                                     options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants, .skipsPackageDescendants]) {
-            while let obj = etor.nextObject() {
-                guard let suburl = obj as? URL else { continue }
-                results.append(contentsOf: scanForBinaries(at: suburl))
+        while let obj = etor.nextObject() {
+            guard let suburl = obj as? URL else { continue }
+            guard FileManager.default.fileExists(atPath: suburl.path, isDirectory: &isDir) else { continue }
+
+            if !isDir.boolValue, let result = analyzeFile(at: suburl) {
+                results.append(result)
             }
         }
         return results
@@ -163,16 +182,19 @@ class MainViewModel: ViewModel {
         let binariesToThin = state.scanResults.filter { $0.writableStatus != .readOnlyVolume && $0.slices.contains(where: { $0.key != sliceTypeForCurrentArch }) }
 
         DispatchQueue.global(qos: .userInitiated).async {
-            for binary in binariesToThin {
-                var processingBinary = binary
-                processingBinary.isProcessing = true
+            for var binary in binariesToThin {
+                binary.isProcessing = true
                 DispatchQueue.main.async {
-                    self.updateResults(with: [processingBinary])
+                    self.updateResults(with: [binary])
                 }
+
                 if self.thinBinary(at: binary.url), let processedBinary = self.analyzeFile(at: binary.url) {
-                    DispatchQueue.main.async {
-                        self.updateResults(with: [processedBinary])
-                    }
+                    binary = processedBinary
+                }
+
+                binary.isProcessing = false
+                DispatchQueue.main.async {
+                    self.updateResults(with: [binary])
                 }
             }
             DispatchQueue.main.async {
