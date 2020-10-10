@@ -21,10 +21,11 @@ struct ScanResultRow: View {
                     .font(.system(size: 10.0, weight: .regular, design: .default))
                     .truncationMode(.middle)
             }
-            Spacer()
-            if let icon = statusIcon {
-                Image(nsImage: icon)
-            }
+            Spacer(minLength: 20)
+            Text(sliceArchNames)
+                .font(.system(size: 10.0, weight: .regular, design: .default))
+                .frame(width: 50, height: nil, alignment: .center)
+            Image(nsImage: statusIcon)
         }
         .opacity(isEligible ? 1.0 : 0.7)
         .padding(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4))
@@ -37,8 +38,27 @@ struct ScanResultRow: View {
         }
     }
 
-    private var statusIcon: NSImage? {
-        guard isEligible else { return nil }
+    private var sliceArchNames: String {
+        return scanResult.slices
+            .map {
+                switch $0.key {
+                case .ppc: return "PPC"
+                case .ppc64: return "PPC64"
+                case .i386: return "i386"
+                case .x86_64: return "x86_64"
+                case .armV6: return "ARMv6"
+                case .armV7: return "ARMv7"
+                case .armV7s: return "ARMv7s"
+                case .arm64: return "ARM64"
+                default: return "unknown"
+                }
+            }
+            .sorted()
+            .joined(separator: "\n")
+    }
+
+    private var statusIcon: NSImage {
+        guard isEligible else { return NSImage(named: NSImage.statusNoneName)! }
 
         switch scanResult.writableStatus {
         case .readOnlyVolume: return NSImage(named: NSImage.statusUnavailableName)!
@@ -48,7 +68,7 @@ struct ScanResultRow: View {
     }
 
     private var isEligible: Bool {
-        return scanResult.isFatBinary && scanResult.slices.count > 1 && scanResult.slices[.ARM64] != nil
+        return scanResult.isFatBinary && scanResult.slices.count > 1
     }
 }
 

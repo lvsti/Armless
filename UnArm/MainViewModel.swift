@@ -144,7 +144,7 @@ class MainViewModel: ViewModel {
 
     private func disarmBinaries() {
         state.isProcessing = true
-        let binariesToDisarm = state.scanResults.filter { $0.writableStatus != .readOnlyVolume && $0.slices[.ARM64] != nil }
+        let binariesToDisarm = state.scanResults.filter { $0.writableStatus != .readOnlyVolume && $0.slices[.arm64] != nil }
 
         DispatchQueue.global(qos: .userInitiated).async {
             for binary in binariesToDisarm {

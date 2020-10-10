@@ -10,14 +10,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, SliceType) {
-    kSliceTypePPC,
-    kSliceTypePPC64,
-    kSliceTypeI386,
-    kSliceTypeX86_64,
-    kSliceTypeARMv6,
-    kSliceTypeARMv7,
-    kSliceTypeARMv7s,
-    kSliceTypeARM64,
+    kSliceTypePPC NS_SWIFT_NAME(ppc),
+    kSliceTypePPC64 NS_SWIFT_NAME(ppc64),
+    kSliceTypeI386 NS_SWIFT_NAME(i386),
+    kSliceTypeX86_64 NS_SWIFT_NAME(x86_64),
+    kSliceTypeARMv6 NS_SWIFT_NAME(armV6),
+    kSliceTypeARMv7 NS_SWIFT_NAME(armV7),
+    kSliceTypeARMv7s NS_SWIFT_NAME(armV7s),
+    kSliceTypeARM64 NS_SWIFT_NAME(arm64),
     kSliceTypeUnknown
 };
 
