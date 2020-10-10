@@ -18,8 +18,8 @@ struct ScanResult {
     let url: URL
     let writableStatus: WritableStatus
     let isFatBinary: Bool
-    let slices: [SliceType: UInt64]
-    let originalSize: Int
+    let slices: [SliceType: Int64]
+    let originalSize: Int64
     var isProcessing: Bool
     let icon: NSImage
 }
@@ -32,6 +32,7 @@ struct MainViewState {
     var scanResults: [ScanResult]
     var selectedIDs: Set<ScanResult.ID>
     var isProcessing: Bool
+    var sliceTypeForCurrentArch: SliceType
 }
 
 enum MainViewInput {
@@ -44,7 +45,8 @@ enum MainViewInput {
 
 
 class MainViewModel: ViewModel {
-    @Published private(set) var state: MainViewState = MainViewState(scanResults: [], selectedIDs: [], isProcessing: false)
+    @Published private(set) var state: MainViewState = MainViewState(scanResults: [], selectedIDs: [], isProcessing: false, sliceTypeForCurrentArch: .x86_64)
+    private let sliceTypeForCurrentArch: SliceType = .x86_64
 
     func trigger(_ input: MainViewInput) {
         switch input {
@@ -109,12 +111,12 @@ class MainViewModel: ViewModel {
               values.isExecutable! && values.isRegularFile!
         else { return nil }
 
-        guard let reader = MachOReader(url: url) else { return nil }
+        guard let reader = MachOReader(url: url), reader.slices[NSNumber(value: sliceTypeForCurrentArch.rawValue)] != nil else { return nil }
         return ScanResult(url: url,
                           writableStatus: values.volumeIsReadOnly! ? .readOnlyVolume : values.isWritable! ? .writable : .writableAsAdmin,
                           isFatBinary: reader.isFatBinary,
-                          slices: Dictionary(reader.slices.map { (SliceType(rawValue: $0.uintValue)!, UInt64($1.uintValue)) }, uniquingKeysWith: { $1 }),
-                          originalSize: values.fileSize!,
+                          slices: Dictionary(reader.slices.map { (SliceType(rawValue: $0.uintValue)!, Int64($1.int64Value)) }, uniquingKeysWith: { $1 }),
+                          originalSize: Int64(values.fileSize!),
                           isProcessing: false,
                           icon: icon(forFileAt: url))
     }

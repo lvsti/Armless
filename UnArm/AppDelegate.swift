@@ -30,6 +30,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.titleVisibility = .hidden
         window.setFrameAutosaveName("Main Window")
         window.contentView = NSHostingView(rootView: contentView)
+        window.setContentBorderThickness(24.0, for: .minY)
+
 
         var toolbarView = MainToolbar(viewModel: AnyViewModel(mainViewModel))
         toolbarView.viewModel = contentView.viewModel
