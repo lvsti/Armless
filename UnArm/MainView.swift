@@ -23,12 +23,13 @@ struct MainView: View, DropDelegate {
                 else {
                     let selection = Binding(get: { viewModel.state.selectedIDs },
                                             set: { viewModel.trigger(.didChangeSelection(selectedIDs: $0)) })
-                    List(viewModel.state.scanResults, selection: selection) { result in
-                        let index = viewModel.state.scanResults.firstIndex(where: { $0.id == result.id })!
-                        let bgView = Color(NSColor.alternatingContentBackgroundColors[index % NSColor.alternatingContentBackgroundColors.count])
-                        ScanResultRow(scanResult: result)
+                    List(Array(viewModel.state.scanResults.enumerated()), id: \.element.id, selection: selection) { item in
+                        let bgView = Color(NSColor.alternatingContentBackgroundColors[item.offset % NSColor.alternatingContentBackgroundColors.count])
+                        ScanResultRow(scanResult: item.element)
                             .listRowBackground(bgView.frame(minHeight: 44))
+                            .animation(.none)
                     }
+                    .animation(.easeOut)
                     .onDeleteCommand {
                         viewModel.trigger(.didPressDeleteOnList)
                     }
@@ -50,14 +51,29 @@ struct MainToolbar: View {
     @ObservedObject var viewModel: AnyViewModel<MainViewState, MainViewInput>
 
     var body: some View {
-        GeometryReader { geometry in
-            Button("DisARM!") {
-                viewModel.trigger(.didPressDisarmButton)
-            }
-            .disabled(viewModel.state.isProcessing)
-            .offset(y: geometry.safeAreaInsets.top > 0 ? -geometry.size.height / 2 : 0)
+        HStack(alignment: .center) {
+            Spacer()
+                .layoutPriority(1)
+
+            Button(action: {
+                viewModel.trigger(.didPressClearListButton)
+            }, label: {
+                Text("Clear list")
+                    .offset(y: 2)
+            })
+            .offset(y: -18)
+
+            Button(action: {
+                viewModel.trigger(.didPressStartButton)
+            }, label: {
+                Text("Snap!")
+                    .offset(y: 2)
+            })
+            .offset(y: -18)
+
+            Spacer(minLength: 10)
+                .layoutPriority(0)
         }
-        .frame(height: 38)
     }
 }
 

@@ -37,7 +37,8 @@ struct MainViewState {
 
 enum MainViewInput {
     case didReceiveDrop(info: DropInfo)
-    case didPressDisarmButton
+    case didPressClearListButton
+    case didPressStartButton
     case didChangeSelection(selectedIDs: Set<ScanResult.ID>)
     case didPressDeleteOnList
     case clearList
@@ -56,20 +57,30 @@ extension SliceType {
 class MainViewModel: ViewModel {
     @Published private(set) var state: MainViewState = MainViewState(scanResults: [], selectedIDs: [], isProcessing: false, sliceTypeForCurrentArch: .x86_64)
     private let sliceTypeForCurrentArch: SliceType = .x86_64
+    private var scanResultIndices: [ScanResult.ID: Int] = [:]
 
     func trigger(_ input: MainViewInput) {
         switch input {
         case .didReceiveDrop(let info):
             handleDrop(info)
-        case .didPressDisarmButton:
+        case .didPressClearListButton:
+            state.scanResults.removeAll()
+            state.selectedIDs.removeAll()
+            scanResultIndices.removeAll()
+        case .didPressStartButton:
             thinBinaries()
         case .didChangeSelection(let ids):
-            let validIDs = ids.filter { id in !state.scanResults.first(where: { result in id == result.id })!.isProcessing }
+            let validIDs = ids
+                .filter {
+                    guard let index = scanResultIndices[$0] else { return false }
+                    return !state.scanResults[index].isProcessing
+                }
             state.selectedIDs = validIDs
         case .didPressDeleteOnList:
             guard !state.selectedIDs.isEmpty else { break }
             state.scanResults = state.scanResults.filter { !state.selectedIDs.contains($0.id) }
             state.selectedIDs.removeAll()
+            scanResultIndices = Dictionary(state.scanResults.enumerated().map { ($0.element.id, $0.offset) }, uniquingKeysWith: { $1 })
         case .clearList:
             break
         }
@@ -160,6 +171,10 @@ class MainViewModel: ViewModel {
     }
 
     private func updateResults(with newResults: [ScanResult]) {
+        defer {
+            scanResultIndices = Dictionary(state.scanResults.enumerated().map { ($0.element.id, $0.offset) }, uniquingKeysWith: { $1 })
+        }
+
         if state.scanResults.isEmpty {
             state.scanResults = newResults
             return

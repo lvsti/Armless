@@ -36,12 +36,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         var toolbarView = MainToolbar(viewModel: AnyViewModel(mainViewModel))
         toolbarView.viewModel = contentView.viewModel
         let hostedToolbarView = NSHostingView(rootView: toolbarView)
-        hostedToolbarView.frame.size.width = 100
-//        hostedToolbarView.translatesAutoresizingMaskIntoConstraints = false
+        hostedToolbarView.frame.size.width = 200
+        hostedToolbarView.translatesAutoresizingMaskIntoConstraints = false
 
         let titlebarAccessory = NSTitlebarAccessoryViewController()
         titlebarAccessory.view = hostedToolbarView
         titlebarAccessory.layoutAttribute = .trailing
+        titlebarAccessory.view.translatesAutoresizingMaskIntoConstraints = false
 
         window.toolbar = NSToolbar()
         window.addTitlebarAccessoryViewController(titlebarAccessory)
