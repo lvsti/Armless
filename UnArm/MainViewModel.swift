@@ -39,7 +39,12 @@ struct MainViewState {
     var scanResults: [ScanResult]
     var selectedIDs: Set<ScanResult.ID>
     var sliceTypeForCurrentArch: SliceType
-    var isProcessing: Bool
+    var isScanning: Bool
+    var processingProgress: Progress?
+
+    var isProcessing: Bool {
+        processingProgress != nil
+    }
     var isClearButtonEnabled: Bool {
         !isProcessing && !scanResults.isEmpty
     }
@@ -88,7 +93,7 @@ class MainViewModel: ViewModel {
     @Published private(set) var state: MainViewState = MainViewState(scanResults: [],
                                                                      selectedIDs: [],
                                                                      sliceTypeForCurrentArch: .x86_64,
-                                                                     isProcessing: false)
+                                                                     isScanning: false)
 
     private let sliceTypeForCurrentArch: SliceType = .x86_64
     private var scanResultIndices: [ScanResult.ID: Int] = [:]
@@ -124,7 +129,7 @@ class MainViewModel: ViewModel {
         let providers = info.itemProviders(for: [kUTTypeFileURL as String])
         guard !providers.isEmpty else { return }
 
-        state.isProcessing = true
+        state.isScanning = true
         var remaining = providers.count
 
         for provider in providers {
@@ -133,7 +138,7 @@ class MainViewModel: ViewModel {
                     DispatchQueue.main.async {
                         remaining -= 1
                         if remaining == 0 {
-                            self.state.isProcessing = false
+                            self.state.isScanning = false
                         }
                     }
                 }
@@ -225,13 +230,18 @@ class MainViewModel: ViewModel {
     }
 
     private func thinBinaries() {
-        state.isProcessing = true
+        guard !state.isProcessing else { return }
+
         let binariesToThin = state.scanResults.filter { $0.writableStatus != .readOnlyVolume && $0.slices.contains(where: { $0.key != sliceTypeForCurrentArch }) }
+        guard !binariesToThin.isEmpty else { return }
+
+        state.processingProgress = Progress(totalUnitCount: Int64(binariesToThin.count))
 
         DispatchQueue.global(qos: .userInitiated).async {
             for var binary in binariesToThin {
                 binary.isProcessing = true
                 DispatchQueue.main.async {
+                    self.state.processingProgress?.completedUnitCount += 1
                     self.updateResults(with: [binary])
                 }
 
@@ -245,7 +255,7 @@ class MainViewModel: ViewModel {
                 }
             }
             DispatchQueue.main.async {
-                self.state.isProcessing = false
+                self.state.processingProgress = nil
             }
         }
     }
