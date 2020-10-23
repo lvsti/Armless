@@ -25,7 +25,7 @@ struct MainStatusBar: View {
 
             if viewModel.state.isProcessing {
                 Spacer()
-                Spinner(isAnimating: Binding(get: { true }, set: { _ in }), style: .spinning, controlSize: .small)
+                ProgressView(isAnimating: Binding(get: { true }, set: { _ in }), style: .spinning, controlSize: .small)
                     .padding(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4))
             }
         }

@@ -8,12 +8,12 @@
 import AppKit
 import SwiftUI
 
-struct Spinner: NSViewRepresentable {
+struct ProgressView: NSViewRepresentable {
     @Binding var isAnimating: Bool
     let style: NSProgressIndicator.Style
     let controlSize: NSControl.ControlSize
 
-    func makeNSView(context: NSViewRepresentableContext<Spinner>) -> NSProgressIndicator {
+    func makeNSView(context: NSViewRepresentableContext<ProgressView>) -> NSProgressIndicator {
         let view = NSProgressIndicator()
         view.style = style
         view.controlSize = controlSize
@@ -23,7 +23,7 @@ struct Spinner: NSViewRepresentable {
         return view
     }
 
-    func updateNSView(_ view: NSProgressIndicator, context: NSViewRepresentableContext<Spinner>) {
+    func updateNSView(_ view: NSProgressIndicator, context: NSViewRepresentableContext<ProgressView>) {
         if isAnimating {
             view.startAnimation(nil)
         }

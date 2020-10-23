@@ -27,7 +27,7 @@ struct ScanResultRow: View {
                 .frame(width: 50, height: nil, alignment: .center)
 
             if scanResult.isProcessing {
-                Spinner(isAnimating: Binding(get: { scanResult.isProcessing }, set: { _ in }), style: .spinning, controlSize: .small)
+                ProgressView(isAnimating: Binding(get: { scanResult.isProcessing }, set: { _ in }), style: .spinning, controlSize: .small)
             }
             else {
                 Image(nsImage: statusIcon)

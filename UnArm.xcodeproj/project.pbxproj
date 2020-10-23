@@ -16,7 +16,7 @@
 		BE0CEF1F252917E3009C421C /* ScanResultRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF1E252917E3009C421C /* ScanResultRow.swift */; };
 		BE0CEF23252A7CE1009C421C /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF22252A7CE1009C421C /* ViewModel.swift */; };
 		BE2269FB252BC34A002D6DDF /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2269FA252BC34A002D6DDF /* MainViewModel.swift */; };
-		BEC974B82531EF96000D14EB /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC974B72531EF96000D14EB /* Spinner.swift */; };
+		BEC974B82531EF96000D14EB /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC974B72531EF96000D14EB /* ProgressView.swift */; };
 		BEC974BB25320691000D14EB /* MainStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC974BA25320691000D14EB /* MainStatusBar.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +34,7 @@
 		BE0CEF1E252917E3009C421C /* ScanResultRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultRow.swift; sourceTree = "<group>"; };
 		BE0CEF22252A7CE1009C421C /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		BE2269FA252BC34A002D6DDF /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
-		BEC974B72531EF96000D14EB /* Spinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
+		BEC974B72531EF96000D14EB /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		BEC974BA25320691000D14EB /* MainStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainStatusBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,7 +73,7 @@
 				BE0CEF002527B724009C421C /* MainView.swift */,
 				BE2269FA252BC34A002D6DDF /* MainViewModel.swift */,
 				BE0CEF1E252917E3009C421C /* ScanResultRow.swift */,
-				BEC974B72531EF96000D14EB /* Spinner.swift */,
+				BEC974B72531EF96000D14EB /* ProgressView.swift */,
 				BE0CEF22252A7CE1009C421C /* ViewModel.swift */,
 				BE0CEF1A2527D00C009C421C /* MachOReader.h */,
 				BE0CEF1B2527D00C009C421C /* MachOReader.m */,
@@ -168,7 +168,7 @@
 				BE2269FB252BC34A002D6DDF /* MainViewModel.swift in Sources */,
 				BE0CEF012527B724009C421C /* MainView.swift in Sources */,
 				BE0CEF1F252917E3009C421C /* ScanResultRow.swift in Sources */,
-				BEC974B82531EF96000D14EB /* Spinner.swift in Sources */,
+				BEC974B82531EF96000D14EB /* ProgressView.swift in Sources */,
 				BEC974BB25320691000D14EB /* MainStatusBar.swift in Sources */,
 				BE0CEEFF2527B724009C421C /* AppDelegate.swift in Sources */,
 				BE0CEF23252A7CE1009C421C /* ViewModel.swift in Sources */,
