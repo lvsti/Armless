@@ -12,27 +12,35 @@ struct MainStatusBar: View {
 
     var body: some View {
         HStack {
-            if viewModel.state.isProcessing {
+            if let progress = viewModel.state.processingProgress {
                 Text("Processing...")
                     .font(.system(size: 12.0, weight: .regular, design: .default))
                     .foregroundColor(Color(.secondaryLabelColor))
                     .frame(height: 24, alignment: .center)
+                    .padding(.leading, 4)
                 Spacer()
-                ProgressView(isAnimating: Binding(get: { true }, set: { _ in }), style: .bar, controlSize: .small)
+                ProgressView.bar(progress: Binding(get: { progress.fractionCompleted }, set: { _ in }),
+                                 controlSize: .small)
+                    .frame(maxWidth: 100)
+                    .padding(.trailing, 4)
             }
             else {
-                Color.clear
-                    .frame(width: 20, height: 24)
-                Spacer()
+                if viewModel.state.isScanning {
+                    Color.clear
+                        .frame(width: 24, height: 24)
+                    Spacer()
+                }
 
                 Text(viewModel.state.statusText)
                     .font(.system(size: 12.0, weight: .regular, design: .default))
                     .foregroundColor(Color(.secondaryLabelColor))
                     .frame(height: 24, alignment: .center)
 
-                Spacer()
-                ProgressView(isAnimating: Binding(get: { true }, set: { _ in }), style: .spinning, controlSize: .small)
-                    .padding(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4))
+                if viewModel.state.isScanning {
+                    Spacer()
+                    ProgressView.spinner(controlSize: .small)
+                        .padding(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4))
+                }
             }
         }
     }
