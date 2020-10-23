@@ -62,6 +62,7 @@ struct MainToolbar: View {
                     .offset(y: 2)
             })
             .offset(y: -18)
+            .disabled(!viewModel.state.isClearButtonEnabled)
 
             Button(action: {
                 viewModel.trigger(.didPressStartButton)
@@ -70,6 +71,7 @@ struct MainToolbar: View {
                     .offset(y: 2)
             })
             .offset(y: -18)
+            .disabled(!viewModel.state.isStartButtonEnabled)
 
             Spacer(minLength: 10)
                 .layoutPriority(0)
