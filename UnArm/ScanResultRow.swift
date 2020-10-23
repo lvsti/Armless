@@ -33,7 +33,7 @@ struct ScanResultRow: View {
                 Image(nsImage: statusIcon)
             }
         }
-        .opacity(isEligible ? 1.0 : 0.7)
+        .opacity(scanResult.isThinnable ? 1.0 : 0.7)
         .padding(EdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4))
         .contextMenu {
             Button(action: {
@@ -64,17 +64,13 @@ struct ScanResultRow: View {
     }
 
     private var statusIcon: NSImage {
-        guard isEligible else { return NSImage(named: NSImage.statusNoneName)! }
+        guard scanResult.isThinnable else { return NSImage(named: NSImage.statusNoneName)! }
 
         switch scanResult.writableStatus {
         case .readOnlyVolume: return NSImage(named: NSImage.statusUnavailableName)!
         case .writableAsAdmin: return NSImage(named: NSImage.statusPartiallyAvailableName)!
         case .writable: return NSImage(named: NSImage.statusAvailableName)!
         }
-    }
-
-    private var isEligible: Bool {
-        return scanResult.isFatBinary && scanResult.slices.count > 1
     }
 }
 

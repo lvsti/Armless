@@ -22,6 +22,13 @@ struct ScanResult {
     let originalSize: Int64
     var isProcessing: Bool
     let icon: NSImage
+
+    var isThinnable: Bool {
+        isFatBinary && slices.count > 1
+    }
+    var isEligible: Bool {
+        isThinnable && writableStatus != .readOnlyVolume
+    }
 }
 
 extension ScanResult: Identifiable {
@@ -31,8 +38,14 @@ extension ScanResult: Identifiable {
 struct MainViewState {
     var scanResults: [ScanResult]
     var selectedIDs: Set<ScanResult.ID>
-    var isProcessing: Bool
     var sliceTypeForCurrentArch: SliceType
+    var isProcessing: Bool
+    var isClearButtonEnabled: Bool {
+        !isProcessing && !scanResults.isEmpty
+    }
+    var isStartButtonEnabled: Bool {
+        !isProcessing && scanResults.contains(where: { $0.isEligible })
+    }
 }
 
 enum MainViewInput {
@@ -41,7 +54,6 @@ enum MainViewInput {
     case didPressStartButton
     case didChangeSelection(selectedIDs: Set<ScanResult.ID>)
     case didPressDeleteOnList
-    case clearList
 }
 
 extension SliceType {
@@ -55,7 +67,11 @@ extension SliceType {
 }
 
 class MainViewModel: ViewModel {
-    @Published private(set) var state: MainViewState = MainViewState(scanResults: [], selectedIDs: [], isProcessing: false, sliceTypeForCurrentArch: .x86_64)
+    @Published private(set) var state: MainViewState = MainViewState(scanResults: [],
+                                                                     selectedIDs: [],
+                                                                     sliceTypeForCurrentArch: .x86_64,
+                                                                     isProcessing: false)
+
     private let sliceTypeForCurrentArch: SliceType = .x86_64
     private var scanResultIndices: [ScanResult.ID: Int] = [:]
 
@@ -81,8 +97,6 @@ class MainViewModel: ViewModel {
             state.scanResults = state.scanResults.filter { !state.selectedIDs.contains($0.id) }
             state.selectedIDs.removeAll()
             scanResultIndices = Dictionary(state.scanResults.enumerated().map { ($0.element.id, $0.offset) }, uniquingKeysWith: { $1 })
-        case .clearList:
-            break
         }
     }
 
