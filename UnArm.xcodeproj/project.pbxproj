@@ -18,6 +18,7 @@
 		BE2269FB252BC34A002D6DDF /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2269FA252BC34A002D6DDF /* MainViewModel.swift */; };
 		BEC974B82531EF96000D14EB /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC974B72531EF96000D14EB /* ProgressView.swift */; };
 		BEC974BB25320691000D14EB /* MainStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC974BA25320691000D14EB /* MainStatusBar.swift */; };
+		BEF6C9262561AFE600197EEF /* MainToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF6C9252561AFE600197EEF /* MainToolbar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		BE2269FA252BC34A002D6DDF /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		BEC974B72531EF96000D14EB /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		BEC974BA25320691000D14EB /* MainStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainStatusBar.swift; sourceTree = "<group>"; };
+		BEF6C9252561AFE600197EEF /* MainToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainToolbar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 			children = (
 				BE0CEEFE2527B724009C421C /* AppDelegate.swift */,
 				BEC974BA25320691000D14EB /* MainStatusBar.swift */,
+				BEF6C9252561AFE600197EEF /* MainToolbar.swift */,
 				BE0CEF002527B724009C421C /* MainView.swift */,
 				BE2269FA252BC34A002D6DDF /* MainViewModel.swift */,
 				BE0CEF1E252917E3009C421C /* ScanResultRow.swift */,
@@ -167,6 +170,7 @@
 			files = (
 				BE2269FB252BC34A002D6DDF /* MainViewModel.swift in Sources */,
 				BE0CEF012527B724009C421C /* MainView.swift in Sources */,
+				BEF6C9262561AFE600197EEF /* MainToolbar.swift in Sources */,
 				BE0CEF1F252917E3009C421C /* ScanResultRow.swift in Sources */,
 				BEC974B82531EF96000D14EB /* ProgressView.swift in Sources */,
 				BEC974BB25320691000D14EB /* MainStatusBar.swift in Sources */,
