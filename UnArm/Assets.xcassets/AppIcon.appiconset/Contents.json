@@ -16,6 +16,7 @@
       "size" : "32x32"
     },
     {
+      "filename" : "snap64.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "32x32"
@@ -31,6 +32,7 @@
       "size" : "128x128"
     },
     {
+      "filename" : "snap256.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
@@ -46,6 +48,7 @@
       "size" : "512x512"
     },
     {
+      "filename" : "snap1024.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "512x512"
