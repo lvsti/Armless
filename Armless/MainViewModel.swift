@@ -1,6 +1,6 @@
 //
 //  MainViewModel.swift
-//  UnArm
+//  Armless
 //
 //  Created by Tamas Lustyik on 2020. 10. 05..
 //

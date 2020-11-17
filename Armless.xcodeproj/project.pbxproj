@@ -22,14 +22,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BE0CEEFB2527B724009C421C /* UnArm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnArm.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE0CEEFB2527B724009C421C /* Mostly ARMless.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mostly ARMless.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE0CEEFE2527B724009C421C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BE0CEF002527B724009C421C /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		BE0CEF022527B724009C421C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BE0CEF052527B724009C421C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		BE0CEF082527B724009C421C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BE0CEF0A2527B724009C421C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BE0CEF192527D00C009C421C /* UnArm-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UnArm-Bridging-Header.h"; sourceTree = "<group>"; };
+		BE0CEF192527D00C009C421C /* Armless-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Armless-Bridging-Header.h"; sourceTree = "<group>"; };
 		BE0CEF1A2527D00C009C421C /* MachOReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MachOReader.h; sourceTree = "<group>"; };
 		BE0CEF1B2527D00C009C421C /* MachOReader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MachOReader.m; sourceTree = "<group>"; };
 		BE0CEF1E252917E3009C421C /* ScanResultRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultRow.swift; sourceTree = "<group>"; };
@@ -54,7 +54,7 @@
 		BE0CEEF22527B723009C421C = {
 			isa = PBXGroup;
 			children = (
-				BE0CEEFD2527B724009C421C /* UnArm */,
+				BE0CEEFD2527B724009C421C /* Armless */,
 				BE0CEEFC2527B724009C421C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -62,31 +62,31 @@
 		BE0CEEFC2527B724009C421C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BE0CEEFB2527B724009C421C /* UnArm.app */,
+				BE0CEEFB2527B724009C421C /* Mostly ARMless.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BE0CEEFD2527B724009C421C /* UnArm */ = {
+		BE0CEEFD2527B724009C421C /* Armless */ = {
 			isa = PBXGroup;
 			children = (
 				BE0CEEFE2527B724009C421C /* AppDelegate.swift */,
+				BE0CEF022527B724009C421C /* Assets.xcassets */,
+				BE0CEF0A2527B724009C421C /* Info.plist */,
+				BE0CEF1A2527D00C009C421C /* MachOReader.h */,
+				BE0CEF1B2527D00C009C421C /* MachOReader.m */,
+				BE0CEF072527B724009C421C /* Main.storyboard */,
 				BEC974BA25320691000D14EB /* MainStatusBar.swift */,
 				BEF6C9252561AFE600197EEF /* MainToolbar.swift */,
 				BE0CEF002527B724009C421C /* MainView.swift */,
 				BE2269FA252BC34A002D6DDF /* MainViewModel.swift */,
-				BE0CEF1E252917E3009C421C /* ScanResultRow.swift */,
-				BEC974B72531EF96000D14EB /* ProgressView.swift */,
-				BE0CEF22252A7CE1009C421C /* ViewModel.swift */,
-				BE0CEF1A2527D00C009C421C /* MachOReader.h */,
-				BE0CEF1B2527D00C009C421C /* MachOReader.m */,
-				BE0CEF022527B724009C421C /* Assets.xcassets */,
-				BE0CEF072527B724009C421C /* Main.storyboard */,
-				BE0CEF0A2527B724009C421C /* Info.plist */,
 				BE0CEF042527B724009C421C /* Preview Content */,
-				BE0CEF192527D00C009C421C /* UnArm-Bridging-Header.h */,
+				BEC974B72531EF96000D14EB /* ProgressView.swift */,
+				BE0CEF1E252917E3009C421C /* ScanResultRow.swift */,
+				BE0CEF192527D00C009C421C /* Armless-Bridging-Header.h */,
+				BE0CEF22252A7CE1009C421C /* ViewModel.swift */,
 			);
-			path = UnArm;
+			path = Armless;
 			sourceTree = "<group>";
 		};
 		BE0CEF042527B724009C421C /* Preview Content */ = {
@@ -100,9 +100,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		BE0CEEFA2527B723009C421C /* UnArm */ = {
+		BE0CEEFA2527B723009C421C /* Mostly ARMless */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BE0CEF0E2527B724009C421C /* Build configuration list for PBXNativeTarget "UnArm" */;
+			buildConfigurationList = BE0CEF0E2527B724009C421C /* Build configuration list for PBXNativeTarget "Mostly ARMless" */;
 			buildPhases = (
 				BE0CEEF72527B723009C421C /* Sources */,
 				BE0CEEF82527B723009C421C /* Frameworks */,
@@ -112,9 +112,9 @@
 			);
 			dependencies = (
 			);
-			name = UnArm;
+			name = "Mostly ARMless";
 			productName = UnArm;
-			productReference = BE0CEEFB2527B724009C421C /* UnArm.app */;
+			productReference = BE0CEEFB2527B724009C421C /* Mostly ARMless.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -132,7 +132,7 @@
 					};
 				};
 			};
-			buildConfigurationList = BE0CEEF62527B723009C421C /* Build configuration list for PBXProject "UnArm" */;
+			buildConfigurationList = BE0CEEF62527B723009C421C /* Build configuration list for PBXProject "Armless" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -145,7 +145,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				BE0CEEFA2527B723009C421C /* UnArm */,
+				BE0CEEFA2527B723009C421C /* Mostly ARMless */,
 			);
 		};
 /* End PBXProject section */
@@ -315,20 +315,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = UnArm/UnArm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"UnArm/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Armless/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = UnArm/Info.plist;
+				INFOPLIST_FILE = Armless/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.UnArm;
+				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.MostlyARMless;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "UnArm/UnArm-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Armless/Armless-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -340,20 +339,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = UnArm/UnArm.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"UnArm/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Armless/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = UnArm/Info.plist;
+				INFOPLIST_FILE = Armless/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.UnArm;
+				PRODUCT_BUNDLE_IDENTIFIER = me.cocoagrinder.MostlyARMless;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "UnArm/UnArm-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Armless/Armless-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -361,7 +359,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BE0CEEF62527B723009C421C /* Build configuration list for PBXProject "UnArm" */ = {
+		BE0CEEF62527B723009C421C /* Build configuration list for PBXProject "Armless" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BE0CEF0C2527B724009C421C /* Debug */,
@@ -370,7 +368,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		BE0CEF0E2527B724009C421C /* Build configuration list for PBXNativeTarget "UnArm" */ = {
+		BE0CEF0E2527B724009C421C /* Build configuration list for PBXNativeTarget "Mostly ARMless" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				BE0CEF0F2527B724009C421C /* Debug */,
