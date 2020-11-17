@@ -26,12 +26,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
         window.center()
-        window.title = "DisARM"
+        window.title = "Mostly ARMless"
         window.titleVisibility = .hidden
         window.setFrameAutosaveName("Main Window")
         window.contentView = NSHostingView(rootView: contentView)
         window.setContentBorderThickness(24.0, for: .minY)
 
+        window.toolbar = NSToolbar()
+
+        let titleView = MainTitle()
+        let hostedTitleView = NSHostingView(rootView: titleView)
+        hostedTitleView.frame.size.width = 200
+        hostedTitleView.translatesAutoresizingMaskIntoConstraints = false
+
+        let titleAccessory = NSTitlebarAccessoryViewController()
+        titleAccessory.view = hostedTitleView
+        titleAccessory.layoutAttribute = .leading
+
+        window.addTitlebarAccessoryViewController(titleAccessory)
 
         var toolbarView = MainToolbar(viewModel: AnyViewModel(mainViewModel))
         toolbarView.viewModel = contentView.viewModel
@@ -39,13 +51,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         hostedToolbarView.frame.size.width = 200
         hostedToolbarView.translatesAutoresizingMaskIntoConstraints = false
 
-        let titlebarAccessory = NSTitlebarAccessoryViewController()
-        titlebarAccessory.view = hostedToolbarView
-        titlebarAccessory.layoutAttribute = .trailing
-        titlebarAccessory.view.translatesAutoresizingMaskIntoConstraints = false
+        let toolbarAccessory = NSTitlebarAccessoryViewController()
+        toolbarAccessory.view = hostedToolbarView
+        toolbarAccessory.layoutAttribute = .trailing
 
-        window.toolbar = NSToolbar()
-        window.addTitlebarAccessoryViewController(titlebarAccessory)
+        window.addTitlebarAccessoryViewController(toolbarAccessory)
 
         window.makeKeyAndOrderFront(nil)
     }

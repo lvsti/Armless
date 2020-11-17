@@ -7,6 +7,22 @@
 
 import SwiftUI
 
+struct MainTitle: View {
+    var body: some View {
+        HStack(alignment: .center) {
+            Color.clear
+                .frame(width: 0)
+            Text((NSApplication.shared.delegate as? AppDelegate)?.window.title ?? "")
+                .offset(y: -18)
+            Image(nsImage: NSImage(named: "AppIcon")!)
+                .resizable()
+                .frame(width: 22, height: 22, alignment: .leading)
+                .offset(y: -18)
+            Spacer()
+        }
+    }
+}
+
 struct MainToolbar: View {
     @ObservedObject var viewModel: AnyViewModel<MainViewState, MainViewInput>
 
