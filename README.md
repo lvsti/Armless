@@ -24,6 +24,13 @@ Binary thinning is started with the Snap! toolbar button. Thinning will be perfo
 
 _Mostly ARMless_ is just a graphical frontend to `lipo`, so apart from the convenience UI there is really not much else to it. It served for me as a test project to get familiar with SwiftUI.
 
+## Known issues
+
+- currently the app is hardcoded to assume that the current machine is an Intel one
+- admin permissions are not asked for, thinning binaries with restricted access will silently fail
+- not tested on Big Sur
+- not tested on Apple Silicon machines
+
 ## Requirements
 
 To build: Xcode 11.7+
