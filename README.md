@@ -34,7 +34,7 @@ _Mostly ARMless_ is just a graphical frontend to `lipo`, so apart from the conve
 
 To build: Xcode 11.7+
 
-To run: macOS Catalina (10.15) and above
+To run: macOS Catalina (10.15) and above, with `lipo` installed (comes with Xcode/Command Line Tools)
 
 ## License
 
