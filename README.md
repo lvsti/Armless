@@ -26,7 +26,6 @@ _Mostly ARMless_ is just a graphical frontend to `lipo`, so apart from the conve
 
 ## Known issues
 
-- currently the app is hardcoded to assume that the current machine is an Intel one
 - admin permissions are not asked for, thinning binaries with restricted access will silently fail
 - not tested on Big Sur
 - not tested on Apple Silicon machines

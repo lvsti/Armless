@@ -16,6 +16,7 @@
 		BE0CEF1F252917E3009C421C /* ScanResultRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF1E252917E3009C421C /* ScanResultRow.swift */; };
 		BE0CEF23252A7CE1009C421C /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CEF22252A7CE1009C421C /* ViewModel.swift */; };
 		BE2269FB252BC34A002D6DDF /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2269FA252BC34A002D6DDF /* MainViewModel.swift */; };
+		BE38CD64256ACE3800714576 /* SystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = BE38CD63256ACE3800714576 /* SystemInfo.m */; };
 		BEC974B82531EF96000D14EB /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC974B72531EF96000D14EB /* ProgressView.swift */; };
 		BEC974BB25320691000D14EB /* MainStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEC974BA25320691000D14EB /* MainStatusBar.swift */; };
 		BEF6C9262561AFE600197EEF /* MainToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF6C9252561AFE600197EEF /* MainToolbar.swift */; };
@@ -35,6 +36,8 @@
 		BE0CEF1E252917E3009C421C /* ScanResultRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultRow.swift; sourceTree = "<group>"; };
 		BE0CEF22252A7CE1009C421C /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		BE2269FA252BC34A002D6DDF /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		BE38CD62256ACE3800714576 /* SystemInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemInfo.h; sourceTree = "<group>"; };
+		BE38CD63256ACE3800714576 /* SystemInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SystemInfo.m; sourceTree = "<group>"; };
 		BEC974B72531EF96000D14EB /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		BEC974BA25320691000D14EB /* MainStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainStatusBar.swift; sourceTree = "<group>"; };
 		BEF6C9252561AFE600197EEF /* MainToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainToolbar.swift; sourceTree = "<group>"; };
@@ -71,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				BE0CEEFE2527B724009C421C /* AppDelegate.swift */,
+				BE0CEF192527D00C009C421C /* Armless-Bridging-Header.h */,
 				BE0CEF022527B724009C421C /* Assets.xcassets */,
 				BE0CEF0A2527B724009C421C /* Info.plist */,
 				BE0CEF1A2527D00C009C421C /* MachOReader.h */,
@@ -83,7 +87,8 @@
 				BE0CEF042527B724009C421C /* Preview Content */,
 				BEC974B72531EF96000D14EB /* ProgressView.swift */,
 				BE0CEF1E252917E3009C421C /* ScanResultRow.swift */,
-				BE0CEF192527D00C009C421C /* Armless-Bridging-Header.h */,
+				BE38CD62256ACE3800714576 /* SystemInfo.h */,
+				BE38CD63256ACE3800714576 /* SystemInfo.m */,
 				BE0CEF22252A7CE1009C421C /* ViewModel.swift */,
 			);
 			path = Armless;
@@ -176,6 +181,7 @@
 				BEC974BB25320691000D14EB /* MainStatusBar.swift in Sources */,
 				BE0CEEFF2527B724009C421C /* AppDelegate.swift in Sources */,
 				BE0CEF23252A7CE1009C421C /* ViewModel.swift in Sources */,
+				BE38CD64256ACE3800714576 /* SystemInfo.m in Sources */,
 				BE0CEF1C2527D00C009C421C /* MachOReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

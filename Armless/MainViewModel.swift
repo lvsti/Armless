@@ -90,12 +90,13 @@ extension SliceType {
 }
 
 class MainViewModel: ViewModel {
+    private static let sliceTypeForCurrentArch: SliceType = SystemInfo.cpuType == .arm64 ? .arm64 : .x86_64
+
     @Published private(set) var state: MainViewState = MainViewState(scanResults: [],
                                                                      selectedIDs: [],
-                                                                     sliceTypeForCurrentArch: .x86_64,
+                                                                     sliceTypeForCurrentArch: sliceTypeForCurrentArch,
                                                                      isScanning: false)
 
-    private let sliceTypeForCurrentArch: SliceType = .x86_64
     private var scanResultIndices: [ScanResult.ID: Int] = [:]
 
     func trigger(_ input: MainViewInput) {
@@ -187,7 +188,7 @@ class MainViewModel: ViewModel {
               values.isExecutable! && values.isRegularFile!
         else { return nil }
 
-        guard let reader = MachOReader(url: url), reader.slices[NSNumber(value: sliceTypeForCurrentArch.rawValue)] != nil else { return nil }
+        guard let reader = MachOReader(url: url), reader.slices[NSNumber(value: Self.sliceTypeForCurrentArch.rawValue)] != nil else { return nil }
         return ScanResult(url: url,
                           writableStatus: values.volumeIsReadOnly! ? .readOnlyVolume : values.isWritable! ? .writable : .writableAsAdmin,
                           isFatBinary: reader.isFatBinary,
@@ -232,7 +233,7 @@ class MainViewModel: ViewModel {
     private func thinBinaries() {
         guard !state.isProcessing else { return }
 
-        let binariesToThin = state.scanResults.filter { $0.writableStatus != .readOnlyVolume && $0.slices.contains(where: { $0.key != sliceTypeForCurrentArch }) }
+        let binariesToThin = state.scanResults.filter { $0.writableStatus != .readOnlyVolume && $0.slices.contains(where: { $0.key != Self.sliceTypeForCurrentArch }) }
         guard !binariesToThin.isEmpty else { return }
 
         state.processingProgress = Progress(totalUnitCount: Int64(binariesToThin.count))
@@ -264,7 +265,7 @@ class MainViewModel: ViewModel {
         do {
             let thinnedURL = url.appendingPathExtension("thinned")
             let lipo = try Process.run(URL(fileURLWithPath: "/usr/bin/lipo"),
-                                       arguments: ["-thin", sliceTypeForCurrentArch.archName!, "-output", thinnedURL.path, url.path])
+                                       arguments: ["-thin", Self.sliceTypeForCurrentArch.archName!, "-output", thinnedURL.path, url.path])
             lipo.waitUntilExit()
 
             guard lipo.terminationStatus == 0 else {
